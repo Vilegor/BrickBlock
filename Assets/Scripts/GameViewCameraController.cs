@@ -5,12 +5,14 @@ public class GameViewCameraController : MonoBehaviour {
 
 	public Camera gameViewCamera;
 	private Vector3 startPos;
+	private bool isMoving;
 
 	// Use this for initialization
 	void Start ()
 	{
-		Rect viewport = new Rect (0, 0, Screen.height, Screen.width);
-		gameViewCamera.rect = viewport;
+		BoxCollider2D collider = this.gameObject.GetComponent<BoxCollider2D> ();
+		RectTransform rectTransform = this.gameObject.GetComponent<RectTransform> ();
+		collider.size = new Vector2(rectTransform.rect.width, rectTransform.rect.height);
 	}
 	
 	// Update is called once per frame
@@ -19,15 +21,19 @@ public class GameViewCameraController : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0)) {
 			if (this.ObjectClicked()) {
 				startPos = Input.mousePosition;
+				isMoving = true;
 			}
 		}
 		if (Input.GetMouseButton(0)) {
-			if (this.ObjectClicked()) {
+			if (this.ObjectClicked() && isMoving) {
 				Vector3 mousePos = Input.mousePosition;
 				Vector3 offset = gameViewCamera.WorldToViewportPoint(mousePos) - gameViewCamera.WorldToViewportPoint(startPos);
 				gameViewCamera.transform.position = gameViewCamera.transform.position - offset;
 				startPos = mousePos;
 			}
+		}
+		if (Input.GetMouseButtonUp (0)) {
+			isMoving = false;
 		}
 	}
 
