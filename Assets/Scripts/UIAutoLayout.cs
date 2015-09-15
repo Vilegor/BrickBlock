@@ -13,16 +13,27 @@ public class UIAutoLayout : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+		this.CalculateBounds ();
+	}
+	
+	// Update is called once per frame
+	void Update ()
+	{
+		this.CalculateBounds ();
+	}
+
+	void CalculateBounds ()
+	{
 		RectTransform gfSize = gameFieldView.GetComponent<RectTransform> ();
 		RectTransform spSize = sidePanel.GetComponent<RectTransform> ();
-
+		
 		float gfHeight = Screen.height;
 		float spHeight = Screen.height;
-
+		
 		float gfWidth = gfHeight;	// game field is likely to be square
 		float spMinWidth = 2 * kIconSize + 3 * kOffset;
 		float spMaxWidth = Screen.width * 0.4375f;
-
+		
 		float spWidth = Screen.width - gfWidth;
 		if (spWidth > spMaxWidth) {
 			spWidth = spMaxWidth;
@@ -32,20 +43,14 @@ public class UIAutoLayout : MonoBehaviour {
 			spWidth = spMinWidth;
 			gfWidth = Screen.width - spWidth;
 		}
-		gfSize.position = new Vector2(gfSize.position.x - (gfSize.rect.width - gfWidth)/2, gfSize.position.y);
-		spSize.position = new Vector2(spSize.position.x + (spSize.rect.width - spWidth)/2, spSize.position.y);
+		gfSize.position = new Vector2(gfSize.position.x - (gfSize.rect.width - gfWidth)/2, gfSize.position.y + (gfSize.rect.height - gfHeight)/2);
+		spSize.position = new Vector2(spSize.position.x + (spSize.rect.width - spWidth)/2, spSize.position.y + (spSize.rect.height - spHeight)/2);
 
 		gfSize.sizeDelta = new Vector2 (gfWidth, gfHeight);
 		spSize.sizeDelta = new Vector2 (spWidth, spHeight);
-
+		
 		// change box collider size
 		BoxCollider2D gfBox = gameFieldView.GetComponent<BoxCollider2D> ();
 		gfBox.size = new Vector2 (gfWidth, gfHeight);
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
 	}
 }
